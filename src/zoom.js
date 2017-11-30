@@ -44,13 +44,12 @@ export default (
                     }
                 };
 
+                const x = configuration.displayLabels ? configuration.labelsWidth + configuration.labelsRightMargin : 0;
+
                 delimiters(
                     container,
                     { x: scalingFunction },
-                    configuration.displayLabels
-                        ? configuration.labelsWidth +
-                              configuration.labelsRightMargin
-                        : 0,
+                    x,
                     configuration.dateFormat
                 );
                 if (callback) {
@@ -64,9 +63,7 @@ export default (
             const drops = container
                 .selectAll('.drop-line')
                 .selectAll('.drop')
-                .attr('cx', (d, i) => {
-                    return scalingFunction(new Date(d.date));
-                });
+                .attr('cx', d => scalingFunction(configuration.date(d)));
 
             sumDataCount(data, result => {
                 if (callback) {

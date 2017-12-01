@@ -15,6 +15,7 @@ export default (
 ) => {
     const onZoom = (data, index, element) => {
         const scalingFunction = d3.event.transform.rescaleX(scales.x);
+
         let result = {};
         if (boolOrReturnValue(configuration.hasTopAxis, data)) {
             container
@@ -44,12 +45,9 @@ export default (
                     }
                 };
 
-                const x = configuration.displayLabels ? configuration.labelsWidth + configuration.labelsRightMargin : 0;
-
                 delimiters(
                     container,
                     { x: scalingFunction },
-                    x,
                     configuration.dateFormat
                 );
                 if (callback) {
@@ -79,9 +77,18 @@ export default (
         configuration.zoomend({dates: {from: domain[0], to: domain[1]}});
     };
 
+
+    let maxScale = configuration.maxScale
+    if (Array.isArray(configuration.maxScaleBounds) && configuration.maxScaleBounds.length==2){
+        const visualOffset = configuration.dataHorizontalMargin;
+        const [d0, d1] = configuration.maxScaleBounds;
+        const chartWidth = dimensions.chartWidth;
+        maxScale = (chartWidth - 2*visualOffset) / Math.abs( scales.x(d1) - scales.x(d0))
+    }
+
     const zoom = d3
         .zoom()
-        .scaleExtent([configuration.minScale, configuration.maxScale])
+        .scaleExtent([configuration.minScale, maxScale])
         .on('zoom', onZoom)
         .on('end', zoomEnd);
 

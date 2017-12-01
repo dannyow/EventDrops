@@ -7,17 +7,17 @@ import { drawTopAxis, drawBottomAxis, boolOrReturnValue } from './xAxis';
 
 export default (svg, dimensions, scales, configuration) => {
     const defs = svg.append('defs');
+    const { margin, labelsWidth, displayLabels, lineHeight} = configuration;
+
+    const chartWidth = dimensions.chartWidth;
+    const chartXOffset = displayLabels ? margin.left + dimensions.labelsTotalWidth : margin.left;
 
     defs
         .append('clipPath')
         .attr('id', 'drops-container-clipper')
         .append('rect')
         .attr('id', 'drops-container-rect')
-        .attr(
-            'width',
-            dimensions.width -
-                (configuration.displayLabels ? configuration.labelsWidth + configuration.labelsRightMargin : 0)
-        )
+        .attr('width', chartWidth)
         .attr(
             'height',
             dimensions.height +
@@ -25,24 +25,18 @@ export default (svg, dimensions, scales, configuration) => {
                 configuration.margin.bottom
         );
 
+    
     const labelsContainer = svg
         .append('g')
         .classed('labels', true)
-        .attr('width', configuration.labelsWidth)
-        .attr('transform', `translate(0, ${configuration.lineHeight})`);
-
+        .attr('width', labelsWidth)
+        .attr('transform', `translate(${margin.left}, ${lineHeight})`);
+    
     const chartWrapper = svg
         .append('g')
         .attr('class', 'chart-wrapper')
-        .attr(
-            'width',
-            dimensions.width -
-                (configuration.displayLabels ? (configuration.labelsWidth + configuration.labelsRightMargin) : 0)
-            )
-        .attr(
-            'transform',
-            `translate(${configuration.displayLabels ? configuration.labelsWidth + configuration.labelsRightMargin : 0}, ${configuration.margin.top})`
-        );
+        .attr('width', chartWidth)
+        .attr('transform', `translate(${chartXOffset}, ${configuration.margin.top})` );
 
     const dropsContainer = chartWrapper
         .append('g')
@@ -56,7 +50,7 @@ export default (svg, dimensions, scales, configuration) => {
     chartWrapper
         .append('g')
         .classed('extremum', true)
-        .attr('width', dimensions.width)
+        .attr('width', chartWidth)
         .attr('height', 30)
         .attr('transform', `translate(0, -35)`);
 
@@ -80,7 +74,6 @@ export default (svg, dimensions, scales, configuration) => {
         delimiters(
             svg,
             scales,
-            configuration.displayLabels ? configuration.labelsWidth + configuration.labelsRightMargin : 0,
             configuration.dateFormat
         );
         drops(data);

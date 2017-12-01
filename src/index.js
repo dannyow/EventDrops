@@ -28,6 +28,15 @@ function eventDrops(config = {}) {
             const dimensions = {
                 width: this.clientWidth,
                 height: data.length * finalConfiguration.lineHeight,
+
+                labelsTotalWidth: finalConfiguration.labelsWidth + finalConfiguration.labelsRightMargin,
+
+                get chartWidth () {
+                    const widthWithoutMargins = this.width - finalConfiguration.margin.left - finalConfiguration.margin.right;
+                    const chartWidth = finalConfiguration.displayLabels ? widthWithoutMargins - this.labelsTotalWidth : widthWithoutMargins
+
+                    return chartWidth;
+                }
             };
 
             const svg = d3
@@ -36,9 +45,7 @@ function eventDrops(config = {}) {
                 .classed('event-drops-chart', true)
                 .attr(
                     'width',
-                    dimensions.width +
-                        (finalConfiguration.margin.left +
-                            finalConfiguration.margin.right)
+                    dimensions.width 
                 )
                 .attr(
                     'height',
@@ -66,14 +73,13 @@ function eventDrops(config = {}) {
     }
 
     function getScales(dimensions, configuration, data) {
+        const visualOffset = configuration.dataHorizontalMargin;
+        const tmpXScale = d3.scaleTime().domain([configuration.start, configuration.end]).range([visualOffset, dimensions.chartWidth-visualOffset]);
+        const timeBoundsWithOffset = [tmpXScale.invert(0), tmpXScale.invert(dimensions.chartWidth)]
         return {
             x: xScale(
-                dimensions.width -
-                    (configuration.displayLabels
-                        ? configuration.labelsWidth +
-                              configuration.labelsRightMargin
-                        : 0),
-                [configuration.start, configuration.end]
+                dimensions.chartWidth,
+                timeBoundsWithOffset
             ),
             y: yScale(data),
         };

@@ -8,6 +8,8 @@ const config = {
     maxScale: Infinity,
     maxScaleBounds: null, // expects range of dates, the difference between them represents maximal zoom; wins over maxScale
     dataHorizontalMargin: 10, // an extra space in px, added between left edge of chart and first value, and between last value and right edge 
+    overlayDataLines: false, // draw data lines on top of each other forming data layers 
+    dropSize: 5, 
     margin: {
         top: 60,
         left: 200,

@@ -43,7 +43,8 @@ export default (svg, dimensions, scales, configuration) => {
         .classed('drops-container', true)
         .attr('clip-path', 'url(#drops-container-clipper)');
 
-    if (configuration.metaballs) {
+    // NOTE: to correctly blur layers made from data lines blur filter must be applied on every data line separately (see drops.js)
+    if (configuration.metaballs && !configuration.overlayDataLines) {
         dropsContainer.style('filter', 'url(#metaballs)');
     }
 

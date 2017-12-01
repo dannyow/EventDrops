@@ -27,7 +27,7 @@ function eventDrops(config = {}) {
 
             const dimensions = {
                 width: this.clientWidth,
-                height: data.length * finalConfiguration.lineHeight,
+                height: finalConfiguration.overlayDataLines ? finalConfiguration.lineHeight : data.length * finalConfiguration.lineHeight,
 
                 labelsTotalWidth: finalConfiguration.labelsWidth + finalConfiguration.labelsRightMargin,
 

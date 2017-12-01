@@ -13,7 +13,16 @@ export default (container, scales, configuration) =>
             .classed('drop-line', true)
             .attr('width', scales.x.range()[1])
             .attr('transform', (d, idx) => `translate(0, ${scales.y(idx)})`)
-            .attr('fill', configuration.eventLineColor);
+            .attr('fill', configuration.eventLineColor)
+            
+
+        if (configuration.overlayDataLines ){
+            dropLines.attr('transform', (d,idx)=>'translate(0,0)')
+            
+            if (configuration.metaballs) {
+                dropLines.style('filter', 'url(#metaballs)')
+            }
+        }   
 
         const drops = dropLines.selectAll('.drop');
 
@@ -22,7 +31,7 @@ export default (container, scales, configuration) =>
             .enter()
             .append('circle')
             .classed('drop', true)
-            .attr('r', 5)
+            .attr('r', configuration.dropSize)
             .attr('cx', d => scales.x(configuration.date(d)))
             .attr('cy', configuration.lineHeight / 2)
             .attr('fill', configuration.eventColor)

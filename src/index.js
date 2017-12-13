@@ -22,7 +22,8 @@ function eventDrops(config = {}) {
     };
 
     function eventDropGraph(selection) {
-        return selection.each(function selector(data) {
+        let scales;
+        const chart = selection.each(function selector(data) {
             d3.select(this).select('.event-drops-chart').remove();
 
             const dimensions = {
@@ -54,7 +55,7 @@ function eventDrops(config = {}) {
                         finalConfiguration.margin.bottom
                 );
 
-            const scales = getScales(dimensions, finalConfiguration, data);
+            scales = getScales(dimensions, finalConfiguration, data);
 
             const draw = drawer(svg, dimensions, scales, finalConfiguration);
             draw(data);
@@ -70,6 +71,9 @@ function eventDrops(config = {}) {
                 );
             }
         });
+
+        chart.dateFormat = finalConfiguration.dateFormat;
+        chart.scales = scales;
     }
 
     function getScales(dimensions, configuration, data) {

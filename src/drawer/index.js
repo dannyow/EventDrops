@@ -72,11 +72,13 @@ export default (svg, dimensions, scales, configuration) => {
 
     return data => {
         lineSeparator(axesContainer, data);
-        delimiters(
-            svg,
-            scales,
-            configuration.dateFormat
-        );
+        if(configuration.hasDelimiter === true){
+            delimiters(
+                svg,
+                scales,
+                configuration.dateFormat
+            );
+        }
         drops(data);
         labels(data);
         if (boolOrReturnValue(configuration.hasTopAxis, data)) {
